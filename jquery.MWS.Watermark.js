@@ -1,7 +1,8 @@
 /*
- Written by:	Kristian Wolseley-Charles
- Date:			24/07/2012 
- */
+ Plugin Name:	MWS Watermark
+ Written By:	Kristian Wolseley-Charles
+ Date:			24/07/2012
+*/
 (function($) {
 	$.fn.watermark = function(options) {
 
@@ -9,37 +10,47 @@
 			text : 'hello'
 		}, settings = $.extend({}, defaults, options);
 
-		this.each(function() {
+		this.each(function(e) {
 			var $this = $(this);
 			var text = this.val;
-
-			// Do this before anything else
-			if ($this.val() == '') {
-				$this.val(settings.text).css({
-					color : '#aaa'
-				});
-
+			var offset = $this.offset();
+			
+			// set customText as the WatermarkText attribute and check the type to see if it exists.
+			// If the attribute exists, override the text value. 
+			var customText = $this.attr('WatermarkText');
+			if(typeof customText != 'undefined' && customText != false){
+				settings.text = $this.attr('WatermarkText');
 			};
 
-			// Add a click event to remove the watermark
-			$this.click(function() {
-				if ($this.val() == settings.text) {
-					$this.val('').css({
-						color : '#000'
-					});
-				}
+			//remove the item to start over if the page is posted back.
+            $('#MWSwm_' + $this.attr('id')).remove();
+
+			// Do this before anything else.
+			if ($this.val() == '') {
+				var MWSWaterMark = '<div id="MWSwm_' + $this.attr('id') + '" class="MWSWatermark">' + settings.text  + '</div>';
+				$(MWSWaterMark).appendTo('body').show().css({
+					top : offset.top,
+					left : offset.left,
+					height : $this.height() + 4,
+					width : $this.width() + 2
+				});
+			};
+
+			// Add a click event to remove the watermark.
+			$('#MWSwm_' + $this.attr('id')).click(function() {
+				$('#MWSwm_' + $this.attr('id')).hide();
+				$this.focus();
 			});
 
-			// Change the textbox back to a water mark if empty 
+			// Change the textbox back to a water mark if empty.
 			$this.blur(function() {
 				if ($this.val() == '') {
-					$this.val(settings.text).css({
-						color : '#aaa'
-					});
+					$('#MWSwm_' + $this.attr('id')).show();
 				};
 			});
 
 		});
+
 		// return the jQuery object for chaining
 		return this;
 	}
