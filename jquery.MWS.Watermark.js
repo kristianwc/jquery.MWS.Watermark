@@ -1,5 +1,5 @@
 /*
- Plugin Name:	MWS Watermark
+ Plugin Name:	jquery.MWS.Watermark
  Written By:	Kristian Wolseley-Charles
  Date:			24/07/2012
 */
@@ -7,7 +7,7 @@
 	$.fn.watermark = function(options) {
 
 		var defaults = {
-			text : 'hello'
+			text : 'Required'
 		}, settings = $.extend({}, defaults, options);
 
 		this.each(function(e) {
